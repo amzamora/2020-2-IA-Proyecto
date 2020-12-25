@@ -1,7 +1,7 @@
 all: build
 
 build:
-	g++ src/main.cpp src/MCLP.cpp src/types.cpp -o MCLP
+	g++ -std=c++17 src/main.cpp src/MCLP.cpp src/types.cpp -o MCLP -ltbb
 
 clean:
 	rm -f MCLP

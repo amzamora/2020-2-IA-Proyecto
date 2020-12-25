@@ -33,7 +33,7 @@ struct Variables {
 
 	Variables(Parameters parameters);
 	void set_x_i_to(int i, bool value);
-	bool set_x_i_to_valid(int i, bool value);
+	bool set_x_i_to_valid(int i, bool value) const;
 	bool is_solution();
 	float z();
 };
