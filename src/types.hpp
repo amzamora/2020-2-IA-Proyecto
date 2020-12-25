@@ -30,8 +30,11 @@ struct Variables {
 	Parameters parameters;
 	std::vector<Variable> x;
 	std::vector<bool> y;
+
 	Variables(Parameters parameters);
 	void set_x_i_to(int i, bool value);
+	bool set_x_i_to_valid(int i, bool value);
+	bool is_solution();
 	float z();
 };
 
