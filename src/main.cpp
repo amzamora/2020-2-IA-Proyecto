@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "types.hpp"
+#include "MCLP.hpp"
 
 Parameters parse_parameters(std::string nodes_file_path, std::string demands_file_path, int S, int p);
 
@@ -20,7 +21,11 @@ int main(int argc, char *argv[]) {
 	// Parse parameters
 	Parameters parameters = parse_parameters(nodes_file_path, demands_file_path, S, p);
 
-	std::cout << "Hello World!\n";
+	// Solve
+	Variables best_solution = MCLP(parameters);
+
+	// Print solution
+	print_solution(best_solution);
 	return 0;
 }
 

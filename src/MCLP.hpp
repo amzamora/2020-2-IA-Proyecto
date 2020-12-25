@@ -3,8 +3,9 @@
 
 #include "types.hpp"
 
-float objective_function(Variables variables);
-float coverage(Variables variables);
+float z(Variables variables);
+float coverage(Parameters parameters, Variables variables);
 Variables MCLP(Parameters parameters);
+void print_solution(Variables variables);
 
 #endif
