@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <execution>
+#include <mutex>
 
 #include "types.hpp"
 
@@ -32,6 +33,7 @@ void print_solution(Variables variables) {
 	std::cout << "\n";
 }
 
+std::mutex m;
 Variables MCLP_backtracking(Variables variables, int i) {
 	// Check if current variables are a solution
 	if (variables.is_solution()) {
@@ -55,7 +57,9 @@ Variables MCLP_backtracking(Variables variables, int i) {
 
 					// If a viable solution is found put on possible_solutions
 					if (aux.is_solution()) {
+						m.lock();
 					 	possible_solutions.push_back(aux);
+						m.unlock();
 					}
 				}
 			}
