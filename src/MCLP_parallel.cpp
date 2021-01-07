@@ -1,5 +1,8 @@
 #include <cmath>
 #include <iostream>
+#include <algorithm>
+#include <execution>
+#include <mutex>
 
 #include "types.hpp"
 
@@ -10,6 +13,7 @@ Variables MCLP(Parameters parameters) {
 	return MCLP_backtracking(variables);
 }
 
+std::mutex m;
 Variables MCLP_backtracking(Variables variables, int i) {
 	// Check if current variables are a solution
 	if (variables.is_solution()) {
@@ -20,21 +24,26 @@ Variables MCLP_backtracking(Variables variables, int i) {
 		std::vector<Variables> possible_solutions;
 
 		// Value in domain fo x_i
-		for (unsigned int val = 0; val < variables.x[i].domain.size(); val++) {
+		std::for_each(
+			std::execution::par_unseq,
+			variables.x[i].domain.begin(),
+			variables.x[i].domain.end(),
+			[variables, i, &possible_solutions](auto&& val) {
+				if (variables.set_x_i_to_valid(i, val)) {
+					// Caculate set the value and move to the next variable
+					Variables aux = variables;
+					aux.set_x_i_to(i, val);
+					aux = MCLP_backtracking(aux, i + 1);
 
-			// If setting the value don't transgress the restrictions
-			if (variables.set_x_i_to_valid(i, variables.x[i].domain[val])) {
-				// Caculate set the value and move to the next variable
-				Variables aux = variables;
-				aux.set_x_i_to(i, aux.x[i].domain[val]);
-				aux = MCLP_backtracking(aux, i + 1);
-
-				// If a viable solution is found put on possible_solutions
-				if (aux.is_solution()) {
-				 	possible_solutions.push_back(aux);
+					// If a viable solution is found put on possible_solutions
+					if (aux.is_solution()) {
+						m.lock();
+					 	possible_solutions.push_back(aux);
+						m.unlock();
+					}
 				}
 			}
-		}
+		);
 
 		if (possible_solutions.size() > 0) {
 			Variables best = possible_solutions[0];
