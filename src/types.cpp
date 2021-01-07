@@ -40,7 +40,7 @@ void Variables::set_x_i_to(int i, bool value) {
 	}
 }
 
-bool Variables::set_x_i_to_valid(int i, bool value) {
+bool Variables::set_x_i_to_valid(int i, bool value) const {
 	// If (variables to instantiate) + (variables = true) can still be equal to p
 	int variables_to_instantiate = this->x.size() - 1 - i;
 	int variables_equal_true = 0;

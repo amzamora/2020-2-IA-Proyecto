@@ -6,6 +6,7 @@
 #include "MCLP.hpp"
 
 Parameters parse_parameters(std::string nodes_file_path, std::string demands_file_path, int S, int p);
+void print_solution(Variables variables);
 
 int main(int argc, char *argv[]) {
 	//  Parse arguments
@@ -67,4 +68,19 @@ Parameters parse_parameters(std::string nodes_file_path, std::string demands_fil
 	}
 
 	return parameters;
+}
+
+void print_solution(Variables variables) {
+	bool variables_used = false;
+	for (unsigned int i = 0; i < variables.x.size(); i++) {
+		if (variables.x[i].setted && variables.x[i].value) {
+			std::cout << "Used node " << i + 1 << "\n";
+			variables_used = true;
+		}
+	}
+	if (!variables_used) {
+		std::cout << "No facilities opened." << "\n";
+	}
+	std::cout << "Demand covered was " << variables.z() << "." << "\n";
+	std::cout << "\n";
 }
