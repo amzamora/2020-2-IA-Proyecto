@@ -7,30 +7,10 @@
 #include "types.hpp"
 
 Variables MCLP_backtracking(Variables variables, int i = 0);
-void print_solution(Variables variables);
 
 Variables MCLP(Parameters parameters) {
 	Variables variables(parameters);
 	return MCLP_backtracking(variables);
-}
-
-float z(Variables variables) {
-	return variables.z();
-}
-
-void print_solution(Variables variables) {
-	bool variables_used = false;
-	for (unsigned int i = 0; i < variables.x.size(); i++) {
-		if (variables.x[i].setted && variables.x[i].value) {
-			std::cout << "Used node " << i + 1 << "\n";
-			variables_used = true;
-		}
-	}
-	if (!variables_used) {
-		std::cout << "No facilities opened." << "\n";
-	}
-	std::cout << "Demand covered was " << z(variables) << "." << "\n";
-	std::cout << "\n";
 }
 
 std::mutex m;
@@ -68,7 +48,7 @@ Variables MCLP_backtracking(Variables variables, int i) {
 		if (possible_solutions.size() > 0) {
 			Variables best = possible_solutions[0];
 			for (unsigned i = 0; i < possible_solutions.size(); i++) {
-				if (z(possible_solutions[i]) > z(best)) {
+				if (possible_solutions[i].z() > best.z()) {
 					best = possible_solutions[i];
 				}
 			}
