@@ -20,10 +20,10 @@ struct Parameters {
 
 struct Variable {
 	bool setted;
-	bool value;
-	std::vector<bool> domain;
-	Variable();
-	void set_value(bool value);
+	int value;
+	std::vector<int> domain;
+	Variable(int nodes_size);
+	void set_value(int value);
 };
 
 struct Variables {
@@ -32,8 +32,8 @@ struct Variables {
 	std::vector<bool> y;
 
 	Variables(Parameters parameters);
-	void set_x_i_to(int i, bool value);
-	bool set_x_i_to_valid(int i, bool value) const;
+	void set_x_i_to(int i, int value);
+	bool set_x_i_to_valid(int i, int value) const;
 	bool is_solution();
 	float z();
 };

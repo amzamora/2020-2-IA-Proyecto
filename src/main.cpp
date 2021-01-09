@@ -74,7 +74,7 @@ void print_solution(Variables variables) {
 	bool variables_used = false;
 	for (unsigned int i = 0; i < variables.x.size(); i++) {
 		if (variables.x[i].setted && variables.x[i].value) {
-			std::cout << "Used node " << i + 1 << "\n";
+			std::cout << "Used node " << variables.x[i].value + 1 << "\n";
 			variables_used = true;
 		}
 	}

@@ -2,13 +2,14 @@
 #include <iostream>
 #include "types.hpp"
 
-Variable::Variable() {
+Variable::Variable(int nodes) {
 	this->setted = false;
-	this->domain.push_back(false);
-	this->domain.push_back(true);
+	for (unsigned int i = 0; i < nodes; i++) {
+		this->domain.push_back(i);
+	}
 }
 
-void Variable::set_value(bool value) {
+void Variable::set_value(int value) {
 	this->value = value;
 	this->setted = true;
 }
@@ -22,49 +23,32 @@ Variables::Variables(Parameters parameters) {
 	this->parameters = parameters;
 
 	// Initialize x variables
-	this->x.resize(parameters.nodes.size(), Variable());
+	this->x.resize(parameters.p, Variable(parameters.nodes.size()));
 
 	// Initialize y variables
 	this->y.resize(parameters.nodes.size(), false);
 }
 
-void Variables::set_x_i_to(int i, bool value) {
+void Variables::set_x_i_to(int i, int value) {
 	this->x[i].set_value(value);
 
-	if (value) {
-		for (unsigned int j = 0; j < this->y.size(); j++) {
-			if (distance(this->parameters.nodes[i], this->parameters.nodes[j]) <= this->parameters.S) {
-				this->y[j] = true;
-			}
+	for (unsigned int j = 0; j < this->y.size(); j++) {
+		if (distance(this->parameters.nodes[this->x[i].value], this->parameters.nodes[j]) <= this->parameters.S) {
+			this->y[j] = true;
 		}
 	}
 }
 
-bool Variables::set_x_i_to_valid(int i, bool value) const {
-	// If (variables to instantiate) + (variables = true) can still be equal to p
-	int variables_to_instantiate = this->x.size() - 1 - i;
-	int variables_equal_true = 0;
+bool Variables::set_x_i_to_valid(int i, int value) const {
 	for (unsigned int j = 0; j < i; j++) {
-		if (this->x[j].value == true) {
-			variables_equal_true++;
-		}
+		if (this->x[j].value == value) return false;
 	}
-	if (value) variables_equal_true++;
-	if (variables_equal_true > this->parameters.p) return false;
-	else if (variables_to_instantiate + variables_equal_true < this->parameters.p) return false;
-	else return true;
+	return true;
 }
 
 bool Variables::is_solution() {
-	int facilities_opened = 0;
 	for (unsigned int i = 0; i < this->x.size(); i++) {
 		if  (!this->x[i].setted) return false;
-		else if (this->x[i].value) facilities_opened += 1;
-	}
-	if (facilities_opened != this->parameters.p) {
-		std::cout << facilities_opened << '\n';
-		std::cout << "This shouldn't happend :/" << "\n";
-		return false;
 	}
 	return true;
 }
