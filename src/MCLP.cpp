@@ -15,6 +15,10 @@ Variables MCLP_backtracking(Variables variables, int i) {
 	if (variables.is_solution()) {
 		return variables;
 	}
+	if (variables.no_possible_value_for_x_i(i)) {
+		variables.comming_back_from = i;
+		return variables;
+	}
 	else {
 		// Calculate possible solutions
 		std::vector<Variables> possible_solutions;
@@ -28,6 +32,10 @@ Variables MCLP_backtracking(Variables variables, int i) {
 				Variables aux = variables;
 				aux.set_x_i_to(i, aux.x[i].domain[val]);
 				aux = MCLP_backtracking(aux, i + 1);
+
+				if (aux.comming_back_from != -1 && aux.x[aux.comming_back_from].last_connected_variable != i) {
+					return aux;
+				}
 
 				// If a viable solution is found put on possible_solutions
 				if (aux.is_solution()) {
@@ -45,7 +53,8 @@ Variables MCLP_backtracking(Variables variables, int i) {
 			}
 			return best;
 		}
-		// Else backtrack
+		
+		// Backtrack
 		return variables;
 	}
 }

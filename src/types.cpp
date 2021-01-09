@@ -10,9 +10,10 @@ Variable::Variable(int nodes) {
 	}
 }
 
-void Variable::set_value(int value) {
+void Variable::set_value(int value, int last_connected_variable) {
 	this->value = value;
 	this->setted = true;
+	this->last_connected_variable = last_connected_variable;
 }
 
 void Variable::remove_value_from_domain(int value) {
@@ -25,6 +26,7 @@ float distance(Node a, Node b) {
 
 Variables::Variables(Parameters parameters) {
 	this->parameters = parameters;
+	this->comming_back_from = -1;
 
 	// Initialize x variables
 	this->x.resize(parameters.p, Variable(parameters.nodes.size()));
@@ -34,7 +36,7 @@ Variables::Variables(Parameters parameters) {
 }
 
 void Variables::set_x_i_to(int i, int value) {
-	this->x[i].set_value(value);
+	this->x[i].set_value(value, i - 1);
 
 	for (unsigned int j = 0; j < this->y.size(); j++) {
 		if (distance(this->parameters.nodes[this->x[i].value], this->parameters.nodes[j]) <= this->parameters.S) {
@@ -49,6 +51,11 @@ void Variables::set_x_i_to(int i, int value) {
 
 bool Variables::set_x_i_to_valid(int i, int value) const {
 	return true;
+}
+
+bool Variables::no_possible_value_for_x_i(int i) {
+	if (this->x[i].domain.size() == 0) return true;
+	else                               return false;
 }
 
 bool Variables::is_solution() {
