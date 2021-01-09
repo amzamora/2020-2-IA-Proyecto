@@ -24,6 +24,7 @@ struct Variable {
 	std::vector<int> domain;
 	Variable(int nodes_size);
 	void set_value(int value);
+	void remove_value_from_domain(int value);
 };
 
 struct Variables {

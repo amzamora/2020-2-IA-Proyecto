@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 #include "types.hpp"
 
 Variable::Variable(int nodes) {
@@ -14,10 +15,13 @@ void Variable::set_value(int value) {
 	this->setted = true;
 }
 
+void Variable::remove_value_from_domain(int value) {
+	this->domain.erase(std::remove(this->domain.begin(), this->domain.end(), value), this->domain.end());
+}
+
 float distance(Node a, Node b) {
 	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
-
 
 Variables::Variables(Parameters parameters) {
 	this->parameters = parameters;
@@ -37,12 +41,13 @@ void Variables::set_x_i_to(int i, int value) {
 			this->y[j] = true;
 		}
 	}
+
+	for (unsigned int j = i + 1; j < this->x.size(); j++) {
+		this->x[j].remove_value_from_domain(value);
+	}
 }
 
 bool Variables::set_x_i_to_valid(int i, int value) const {
-	for (unsigned int j = 0; j < i; j++) {
-		if (this->x[j].value == value) return false;
-	}
 	return true;
 }
 

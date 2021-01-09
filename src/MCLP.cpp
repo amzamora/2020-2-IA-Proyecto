@@ -24,7 +24,7 @@ Variables MCLP_backtracking(Variables variables, int i) {
 
 			// If setting the value don't transgress the restrictions
 			if (variables.set_x_i_to_valid(i, variables.x[i].domain[val])) {
-				// Caculate set the value and move to the next variable
+				// Set the value and move to the next variable
 				Variables aux = variables;
 				aux.set_x_i_to(i, aux.x[i].domain[val]);
 				aux = MCLP_backtracking(aux, i + 1);
