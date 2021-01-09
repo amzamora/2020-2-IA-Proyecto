@@ -43,10 +43,6 @@ void Variables::set_x_i_to(int i, int value) {
 			this->y[j] = true;
 		}
 	}
-
-	for (unsigned int j = i + 1; j < this->x.size(); j++) {
-		this->x[j].remove_value_from_domain(value);
-	}
 }
 
 bool Variables::set_x_i_to_valid(int i, int value) const {
